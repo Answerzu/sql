@@ -1,0 +1,75 @@
+create table book(                                 //создание таблицы
+    book_id INT PRIMARY KEY AUTO_INCREMENT,        // целое число, главный айди, ++
+    title VARCHAR(50),                             //максимальный размер строки
+    author VARCHAR(30),
+    price DECIMAL(8,2),                            //число с плавающей точкой
+    amount INT
+);
+
+INSERT INTO book (title, author, price, amount)                            //вставляем строку
+            VALUES ('Мастер и Маргарита','Булгаков М.А.', 670.99, 3);      // а именно данные
+
+SELECT * FROM book;                                                              /* выводим */
+
+
+
+
+INSERT INTO book (title, author, price, amount)                          //вставляем еще три строки                   
+            VALUES ('Белая гвардия','Булгаков М.А.', 540.50, 5);      
+INSERT INTO book (title, author, price, amount)                            
+            VALUES ('Идиот','Достоевский Ф.М.', 460.00, 10);  
+INSERT INTO book (title, author, price, amount)                            
+            VALUES ('Братья Карамазовы','Достоевский Ф.М.', 799.01, 2);  
+SELECT * FROM book; 
+
+SELECT title, amount FROM book; /* выводим определнные столбцы */  /*можем менять местами столбцы, как хотим*/
+
+
+SELECT title AS Название, author AS Автор FROM book; /*поменять названия столцов и вывести*/
+
+SELECT title, amount, amount * 1.65 AS pack FROM book;
+
+SELECT title, amount, amount * 1.65 AS pack FROM book; /*добавили новый столбец pack, который является произведением значений столбца amount на 1,65)
+
+SELECT title, author, amount, ROUND(price * 0.7, 2) AS new_price FROM book;  /*добавили новый столбец new_price, новая цена с 30% скидкой и округленная до 2 знаков после запятой)
+
+SELECT author, title,
+	ROUND(IF(author = 'Булгаков М.А.', price * 1.1, IF(author = 'Есенин С.А.', price * 1.05, price)), 2) AS new_price   /*Добавили столбец new_price, со скидкой в зависимости от автора*/
+FROM book; 
+
+
+SELECT author, title, price /* вывести только те книги, где количество меньше 10*/
+FROM book
+WHERE amount < 10;
+
+/*Вывести название, автора,  цену  и количество всех книг, цена которых меньше 500 или больше 600, а стоимость всех экземпляров этих книг больше или равна 5000.*/
+SELECT title, author, price, amount
+FROM book
+WHERE (price < 500 OR price > 600) AND price * amount >= 5000;
+
+
+SELECT title, author
+FROM book
+WHERE (price BETWEEN 540.50 AND 800) AND (amount IN (2, 3, 5, 7));  /* BETWEEN - значения между, включая границы. IN - значения из списка*/ 
+
+
+SELECT author, title
+FROM book
+WHERE amount BETWEEN 2 AND 14
+ORDER BY author DESC, title; /*Информацию  отсортировать сначала по авторам (в обратном алфавитном порядке = DESC) , а затем по названиям книг (по алфавиту).*/
+
+/*Оператор LIKE используется для сравнения строк. В отличие от операторов отношения равно (=) и не равно (<>), LIKE позволяет сравнивать строки не на полное совпадение (не совпадение), а в соответствии с шаблоном. Шаблон может включать обычные символы и символы-шаблоны. */
+/* % - Любая строка, содержащая ноль или более символов
+SELECT * FROM book WHERE author LIKE '%М.%'
+выполняет поиск и выдает все книги, инициалы авторов которых содержат «М.»*/
+/*_ - Любой одиночный символ
+SELECT * FROM book WHERE title LIKE 'Поэм_'
+выполняет поиск и выдает все книги, названия которых либо «Поэма», либо «Поэмы» и пр.*/
+
+/*Вывести название и автора тех книг, название которых состоит из двух и более слов, а инициалы автора содержат букву «С». Считать, что в названии слова отделяются друг от друга пробелами и не содержат знаков препинания, между фамилией автора и инициалами обязателен пробел, инициалы записываются без пробела в формате: буква, точка, буква, точка. Информацию отсортировать по названию книги в алфавитном порядке.*/
+SELECT title, author
+FROM book
+WHERE title LIKE  "_% %" AND author LIKE "%С.%"
+ORDER BY title;
+
+
